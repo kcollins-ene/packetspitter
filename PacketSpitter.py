@@ -113,7 +113,7 @@ def main(argv=None):
 			while 1:
 				# accept the connection
 				conn, addr = s.accept()
-				logger.debug("Client Connected from {0}:{1}, forking...".format(addr[0], addr[1]))
+				logger.info("Client Connected from {0}:{1}, forking...".format(addr[0], addr[1]))
 
 				# start new client thread
 				c = Thread(target=packetSpitter, args=(conn, runSignal, opts.rate))
