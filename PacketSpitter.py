@@ -25,7 +25,7 @@ from threading import Event, Thread
 from optparse import OptionParser
 
 __all__ = []
-__version__ = '1.0.9'
+__version__ = '1.0.0'
 __date__ = '2017-03-23'
 __updated__ = '2017-03-23'
 
