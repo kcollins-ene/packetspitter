@@ -70,7 +70,7 @@ def main(argv=None):
 		                  type="int")
 
 		# set defaults
-		parser.set_defaults(verbose=1)
+		parser.set_defaults(verbose=0)
 		parser.set_defaults(rate=100)
 		parser.set_defaults(port=8901)
 
@@ -116,7 +116,7 @@ def main(argv=None):
 				logger.debug("Client Connected from {0}:{1}, forking...".format(addr[0], addr[1]))
 
 				# start new client thread
-				c = Thread(target=packetSpitter, args=(conn, runSignal))
+				c = Thread(target=packetSpitter, args=(conn, runSignal, opts.rate))
 				c.start()
 
 				time.sleep(1)
@@ -137,7 +137,7 @@ def main(argv=None):
 		sys.stderr.write(indent + "  for help use --help")
 		return 2
 
-def packetSpitter(conn, runSignal):
+def packetSpitter(conn, runSignal, rate):
 	# Gather host/port information
 	host, port = conn.getpeername()
 	lastTime = current_ms_time()
@@ -150,7 +150,7 @@ def packetSpitter(conn, runSignal):
 			break
 
 		currentTime = current_ms_time()
-		if currentTime - lastTime >= 100:
+		if currentTime - lastTime >= rate:
 			try:
 				conn.sendall(spitPacket(currentTime))
 			except:
@@ -173,7 +173,6 @@ def packetSpitter(conn, runSignal):
 
 def spitPacket(timestamp):
 	data = str(timestamp).zfill(19)
-	logger.info("Spat Packet: %s" % data)
 	data = data + "\r"
 	logger.debug("Packet Contents: 0x" + binascii.hexlify(data))
 	return data
